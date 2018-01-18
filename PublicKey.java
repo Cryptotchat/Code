@@ -1,3 +1,5 @@
+package jh;
+
 import java.math.BigInteger;
 import java.util.Random;
 
@@ -11,12 +13,13 @@ public class PublicKey {
 	public PublicKey(){
 		this.P = genererPremier();
 		this.Q = genererPremier();
-		this.M = P.multiply(Q);
+		this.Substract();
 	}
 
-	public BigInteger IE(){
-		BigInteger M1= P.add(BigInteger("1"));
-		return M1;
+	public void Substract(){
+		byte [] v = {1};
+		BigInteger un = new BigInteger(v);
+		this.M = P.subtract(un).multiply(Q.subtract(un));
 	}
 
 	public static BigInteger genererPremier() {
@@ -46,6 +49,3 @@ public class PublicKey {
 	}
 
 }
-
-
-
