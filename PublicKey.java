@@ -15,21 +15,8 @@ public class PublicKey {
 	}
 
 	public BigInteger IE(){
-		BigInteger M1= P.add(-1);
-
-	}
-
-	public static boolean estPremier(long n) {
-		int l = 1;
-	    for(int i=2;i<=Math.sqrt(n);i+=l) {
-	    	if(i==3){
-	    		l=2;
-	    	}
-	    	System.out.println("i="+i);
-	        if(n%i==0)
-	            return false;
-	    }
-	    return true;
+		BigInteger M1= P.add(BigInteger("1"));
+		return M1;
 	}
 
 	public static BigInteger genererPremier() {
@@ -55,11 +42,10 @@ public class PublicKey {
 	}
 
 	public String toString(){
-		return "P = " + this.P + " \nQ = " + this.Q;
+		return "P = " + this.P + " \nQ = " + this.Q+" \nM = "+this.M;
 	}
-	public static void main(String[] args) {
-		long P = 4001L;
 
-		System.out.println(P+" est t-il premier ? "+estPremier(P));
-	}
 }
+
+
+
