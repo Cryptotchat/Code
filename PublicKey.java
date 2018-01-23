@@ -5,30 +5,56 @@ import java.util.Random;
 
 public class PublicKey {
 
-	public BigInteger P;
-	public BigInteger Q;
-	public BigInteger M;
+	public static BigInteger P;
+	public static BigInteger Q;
+	public BigInteger N;
+	public static BigInteger M;
 	public BigInteger C;
+	public BigInteger gcd;
 
 	public PublicKey(){
-		this.P = genererPremier();
-		this.Q = genererPremier();
+		PublicKey.P = genererPremier();
+		PublicKey.Q = genererPremier();
 		this.Substract();
+		this.gcd();
 	}
-
+	
 	public void Substract(){
 		byte [] v = {1};
 		BigInteger un = new BigInteger(v);
-		this.M = P.subtract(un).multiply(Q.subtract(un));
+		this.N = P.multiply(Q);
+		PublicKey.M = P.subtract(un).multiply(Q.subtract(un));
 	}
-
+	
+	public void gcd(){
+		C = genererNombre();
+		gcd = M.gcd(C);
+	}
+	public static BigInteger genererNombre() {
+		BigInteger bi;
+		BigInteger Min;
+		if (P.compareTo(Q) <= 0)
+			Min = Q;
+		else
+			Min = P;
+		do {
+		bi = new BigInteger(8, new Random());
+		bi = bi.mod(M);
+		
+		//while (bi.compareTo(P) == 1 && bi.compareTo(Q) == 1)
+		//	genererNombre();
+		//return bi;
+		}while (bi.compareTo(Min)<=0);
+		return bi;
+	}
+	
 	public static BigInteger genererPremier() {
 
 		      // create a BigInteger object
 		      BigInteger bi;
 
 		      // create and assign value to bitLength
-		      int bitLength = 256;
+		      int bitLength = 8;
 
 		      // create a random object
 		      Random rnd = new Random();
@@ -45,7 +71,7 @@ public class PublicKey {
 	}
 
 	public String toString(){
-		return "P = " + this.P + " \nQ = " + this.Q+" \nM = "+this.M;
+		return "P = " + PublicKey.P + " \nQ = " + PublicKey.Q+" \nM = "+PublicKey.M+" \nC = "+this.C+"\nClé publique = ("+this.N+","+this.C+")\n"+this.gcd;
 	}
 
 }
