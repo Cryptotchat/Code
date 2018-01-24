@@ -8,7 +8,7 @@ public class PublicKey {
 	public static BigInteger P;
 	public static BigInteger Q;
 	public BigInteger N;
-	public static BigInteger M;
+	public BigInteger M;
 	public BigInteger C;
 	public BigInteger gcd;
 
@@ -17,13 +17,14 @@ public class PublicKey {
 		PublicKey.Q = genererPremier();
 		this.Substract();
 		this.gcd();
+		this.gcd();
 	}
 	
 	public void Substract(){
 		byte [] v = {1};
 		BigInteger un = new BigInteger(v);
 		this.N = P.multiply(Q);
-		PublicKey.M = P.subtract(un).multiply(Q.subtract(un));
+		this.M = P.subtract(un).multiply(Q.subtract(un));
 	}
 	
 	public void gcd(){
@@ -32,20 +33,13 @@ public class PublicKey {
 	}
 	public static BigInteger genererNombre() {
 		BigInteger bi;
-		BigInteger Min;
-		if (P.compareTo(Q) <= 0)
-			Min = Q;
-		else
-			Min = P;
-		do {
 		bi = new BigInteger(8, new Random());
-		bi = bi.mod(M);
-		
-		//while (bi.compareTo(P) == 1 && bi.compareTo(Q) == 1)
-		//	genererNombre();
-		//return bi;
-		}while (bi.compareTo(Min)<=0);
+		if (bi.compareTo(P) < 1 & bi.compareTo(Q) < 1)
+			return bi;
+		else
+			genererNombre();
 		return bi;
+			
 	}
 	
 	public static BigInteger genererPremier() {
@@ -71,7 +65,7 @@ public class PublicKey {
 	}
 
 	public String toString(){
-		return "P = " + PublicKey.P + " \nQ = " + PublicKey.Q+" \nM = "+PublicKey.M+" \nC = "+this.C+"\nClé publique = ("+this.N+","+this.C+")\n"+this.gcd;
+		return "P = " + PublicKey.P + " \nQ = " + PublicKey.Q+" \nM = "+this.M+" \nC = "+this.C+"\nClé publique = ("+this.N+","+this.C+")\n"+this.gcd;
 	}
 
 }
