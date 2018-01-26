@@ -36,7 +36,7 @@ public class PublicKey {
 		bi = bi.mod(M);
 		System.out.println(bi);
 		gcd = M.gcd(bi);
-		}while (gcd.compareTo(new BigInteger("1")) != 0);
+		}while (gcd.compareTo(new BigInteger("1")) != 0 || bi.compareTo(Min)<=0 || bi.compareTo(M)>=0);
 		return bi;
 	}
 	
