@@ -1,4 +1,3 @@
-package jh;
 import java.math.BigInteger;
 import java.util.Random;
 
@@ -8,14 +7,12 @@ public class PublicKey {
 	public static BigInteger Q;
 	public BigInteger N;
 	public static BigInteger M;
-	public BigInteger C;
 	public static BigInteger gcd;
 
 	public PublicKey(){
 		PublicKey.P = genererPremier();
 		PublicKey.Q = genererPremier();
 		this.Substract();
-		
 	}
 	
 	public void Substract(){
@@ -25,28 +22,23 @@ public class PublicKey {
 		PublicKey.M = P.subtract(un).multiply(Q.subtract(un));
 	}
 	
+
 	public static BigInteger genererNombre() {
 		BigInteger bi;
-		BigInteger Max;
-		bi = new BigInteger(8, new Random());
-		gcd = M.gcd(bi);
-		if (P.compareTo(Q)==1)
-			Max = P;
+		BigInteger Min;
+		if (P.compareTo(Q) <= 0)
+			Min = Q;
 		else
-			Max = Q;
-		do {
-			bi = new BigInteger(8, new Random());
-			bi = bi.mod(M);
-		}while (gcd.compareTo(new BigInteger("1")) == 0 & bi.compareTo(Max)==1 & bi.compareTo(M)>=0);
-		return bi;
-		}
-		/*if (gcd.compareTo(new BigInteger("1")) == 0 && bi.compareTo(Min)>=0 && bi.compareTo(M)<=0 )
-			return bi;
-		else
-			genererNombre();
-		return bi;*/
+			Min = P;
 		
-
+		do {
+		bi = new BigInteger(8, new Random());
+		bi = bi.mod(M);
+		System.out.println(bi);
+		gcd = M.gcd(bi);
+		}while (gcd.compareTo(new BigInteger("1")) != 0);
+		return bi;
+	}
 	
 	public static BigInteger genererPremier() {
 
@@ -71,7 +63,7 @@ public class PublicKey {
 	}
 
 	public String toString(){
-		return "P = " + PublicKey.P + " \nQ = " + PublicKey.Q+" \nM = "+PublicKey.M+" \nC = "+genererNombre()+"\nClé publique = ("+this.N+","+genererNombre()+")\n"+PublicKey.gcd;
+		return "P = " + PublicKey.P + " \nQ = " + PublicKey.Q+" \nM = "+PublicKey.M+" \nClé publique = ("+this.N+","+genererNombre()+")\n"+PublicKey.gcd;
 	}
 
 }
