@@ -32,7 +32,7 @@ public class PublicKey {
 			Min = P;
 		
 		do {
-		bi = new BigInteger(8, new Random());
+		bi = new BigInteger(1024, new Random());
 		bi = bi.mod(M);
 		System.out.println(bi);
 		gcd = M.gcd(bi);
@@ -46,7 +46,7 @@ public class PublicKey {
 		      BigInteger bi;
 
 		      // create and assign value to bitLength
-		      int bitLength = 8;
+		      int bitLength = 1024;
 
 		      // create a random object
 		      Random rnd = new Random();
@@ -61,9 +61,29 @@ public class PublicKey {
 		      //System.out.println( str );
 		      return bi;
 	}
+	
+	/*public static BigInteger trouverU() {
+		BigInteger r = PublicKey.gcd;
+		BigInteger r2 = PublicKey.M;
+		BigInteger u = new BigInteger("1");
+		BigInteger u2 = new BigInteger("0");
+		BigInteger v = new BigInteger("0");
+		BigInteger v2 = new BigInteger("1");
+		
+		while (r2 != new BigInteger("0"))
+			    q = (entier) r/r2
+			    rs = r, us = u, vs = v,
+			    r = r2, u = u2, v = v2,
+			    r2 = rs - q*r2, u2 = us - q*u2, v2 = vs - q*v2
+			 Fin tant que
+			 return u;
+	}*/
+	
 
 	public String toString(){
-		return "P = " + PublicKey.P + " \nQ = " + PublicKey.Q+" \nM = "+PublicKey.M+" \nClé publique = ("+this.N+","+genererNombre()+")\n"+PublicKey.gcd;
+		return "P = " + PublicKey.P + " \nQ = " + PublicKey.Q+" \nM = "+PublicKey.M+" \nClé publique = ("+this.N+","+genererNombre()+")\nPGCD = "+PublicKey.gcd;
 	}
 
 }
+
+
