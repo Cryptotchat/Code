@@ -5,7 +5,8 @@ public class PublicKey {
 
 	public static BigInteger P;
 	public static BigInteger Q;
-	public BigInteger N;
+	public static BigInteger C;
+	public static BigInteger N;
 	public static BigInteger M;
 	public static BigInteger gcd;
 
@@ -18,7 +19,7 @@ public class PublicKey {
 	public void Substract(){
 		byte [] v = {1};
 		BigInteger un = new BigInteger(v);
-		this.N = P.multiply(Q);
+		PublicKey.N = P.multiply(Q);
 		PublicKey.M = P.subtract(un).multiply(Q.subtract(un));
 	}
 	
@@ -32,12 +33,16 @@ public class PublicKey {
 			Min = P;
 		
 		do {
-		bi = new BigInteger(1024, new Random());
+		bi = new BigInteger(8, new Random());
 		bi = bi.mod(M);
 		System.out.println(bi);
 		gcd = M.gcd(bi);
 		}while (gcd.compareTo(new BigInteger("1")) != 0 || bi.compareTo(Min)<=0 || bi.compareTo(M)>=0);
 		return bi;
+	}
+	
+	public static BigInteger C() {
+		return C=genererNombre();
 	}
 	
 	public static BigInteger genererPremier() {
@@ -46,7 +51,7 @@ public class PublicKey {
 		      BigInteger bi;
 
 		      // create and assign value to bitLength
-		      int bitLength = 1024;
+		      int bitLength = 8;
 
 		      // create a random object
 		      Random rnd = new Random();
@@ -60,6 +65,22 @@ public class PublicKey {
 		      // print bi value
 		      //System.out.println( str );
 		      return bi;
+	}
+	
+	public static BigInteger chiffrer() {
+		BigInteger ch1 = new BigInteger("66");
+		BigInteger ch2;
+		ch2 = ch1.modPow(C, N);
+		
+		return ch2;
+	}
+
+	public static BigInteger dechiffrer() {
+		BigInteger de1 = new BigInteger("386");
+		BigInteger de2;
+		de2 = de1.modPow(new BigInteger("4279"),N);
+		
+		return de2;
 	}
 	
 	/*public static BigInteger trouverU() {
@@ -79,9 +100,10 @@ public class PublicKey {
 			 return u;
 	}*/
 	
+	
 
 	public String toString(){
-		return "P = " + PublicKey.P + " \nQ = " + PublicKey.Q+" \nM = "+PublicKey.M+" \nClé publique = ("+this.N+","+genererNombre()+")\nPGCD = "+PublicKey.gcd;
+		return "P = " + PublicKey.P + " \nQ = " + PublicKey.Q+" \nM = "+PublicKey.M+" \nClé publique = ("+PublicKey.N+","+C()+")\nPGCD = "+PublicKey.gcd;
 	}
 
 }
