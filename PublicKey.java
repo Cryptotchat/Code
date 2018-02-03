@@ -8,6 +8,7 @@ public class PublicKey {
 	public static BigInteger C;
 	public static BigInteger N;
 	public static BigInteger M;
+	public static BigInteger U;
 	public static BigInteger gcd;
 
 	public PublicKey(){
@@ -83,29 +84,41 @@ public class PublicKey {
 		return de2;
 	}
 	
-	/*public static BigInteger trouverU() {
-		BigInteger r = PublicKey.gcd;
-		BigInteger r2 = PublicKey.M;
-		BigInteger u = new BigInteger("1");
-		BigInteger u2 = new BigInteger("0");
-		BigInteger v = new BigInteger("0");
-		BigInteger v2 = new BigInteger("1");
-		
-		while (r2 != new BigInteger("0"))
-			    q = (entier) r/r2
-			    rs = r, us = u, vs = v,
-			    r = r2, u = u2, v = v2,
-			    r2 = rs - q*r2, u2 = us - q*u2, v2 = vs - q*v2
-			 Fin tant que
-			 return u;
-	}*/
+	public static BigInteger trouverU() {
+		BigInteger x = new BigInteger("0");
+		BigInteger y = new BigInteger("1");
+		BigInteger m = M;
+		BigInteger n = m;
+		BigInteger c = C;
+		BigInteger lastx = new BigInteger("1");
+		BigInteger lasty = new BigInteger("0");
+		BigInteger temp;
+        do{
+            BigInteger q = c.divide(n);
+            BigInteger r = c.remainder(n);
+ 
+            c = n;
+            n = r;
+ 
+            temp = x;
+            x = lastx.subtract(q.multiply(x));
+            lastx = temp;
+ 
+            temp = y;
+            y = lasty.subtract(q.multiply(y));
+            lasty = temp;            
+        
+        }while (n.compareTo(new BigInteger("0"))>0);
+       
+        if (lastx.compareTo(new BigInteger("0"))<=0) {
+        	lastx = lastx.subtract(m.multiply(new BigInteger("-1")));
+        }
+		return lastx;
+	}
 	
-	
-
 	public String toString(){
-		return "P = " + PublicKey.P + " \nQ = " + PublicKey.Q+" \nM = "+PublicKey.M+" \nClé publique = ("+PublicKey.N+","+C()+")\nPGCD = "+PublicKey.gcd;
+		return "P = " + PublicKey.P + " \nQ = " + PublicKey.Q+" \nM = "+PublicKey.M+" \nClé publique = ("+PublicKey.N+","+C()+")\nPGCD = "+PublicKey.gcd +" \nClé privé = ("+PublicKey.N+","+trouverU()+")\n";
 	}
 
 }
-
 
