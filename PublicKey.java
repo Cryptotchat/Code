@@ -77,9 +77,9 @@ public class PublicKey {
 	}
 
 	public static BigInteger dechiffrer() {
-		BigInteger de1 = new BigInteger("386");
+		BigInteger de1 = chiffrer();
 		BigInteger de2;
-		de2 = de1.modPow(new BigInteger("4279"),N);
+		de2 = de1.modPow(trouverU(),N);
 		
 		return de2;
 	}
@@ -121,4 +121,5 @@ public class PublicKey {
 	}
 
 }
+
 
