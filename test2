@@ -1,0 +1,14 @@
+
+public class test2 {
+
+	public static void main(String[] args) {
+		
+		PublicAndPrivateKey PK1;
+		PK1 = new PublicAndPrivateKey();	
+		System.out.println(PK1.toString());
+		
+		System.out.println("message une fois chiffré : "+PublicAndPrivateKey.chiffrer());
+		System.out.println("message une fois déchiffré : "+PublicAndPrivateKey.dechiffrer());
+	}
+
+}
