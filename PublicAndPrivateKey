@@ -51,7 +51,7 @@ public class PublicAndPrivateKey {
 	}
 	
 		/* ------- CLÉ PRIVÉE ------- */
-		public static void trouverU() {
+		public void trouverU() {
 			BigInteger x = new BigInteger("0");
 			BigInteger y = new BigInteger("1");
 			BigInteger m = M;
@@ -81,9 +81,10 @@ public class PublicAndPrivateKey {
 	        	lastx = lastx.subtract(m.multiply(new BigInteger("-1")));
 	        }
 			U = lastx;
+			TEST();
 		}
 		
-		public String TEST() {
+		public void TEST() {
 			BigInteger BASE = new BigInteger("66");
 			BigInteger RES;
 			BigInteger RES2;
@@ -93,10 +94,10 @@ public class PublicAndPrivateKey {
 			RES2 = RES.modPow(U,N);
 			System.out.println("de2 = " + RES2);
 			if (RES2.compareTo(new BigInteger("66")) != 0) {
-				PublicAndPrivateKey();
-				return "erreur";}
-			return "bon";
-			
+				genererNombre();
+				genererPremier();
+				trouverU();
+			}	
 		}
 		
 		
@@ -121,7 +122,7 @@ public class PublicAndPrivateKey {
 		}
 		
 		public String toString(){
-			return "P = " + P + " \nQ = " + Q+" \nM = "+M+" \nClé publique = ("+N+","+C+")\nPGCD = "+gcd+"\nClé Privé = ("+N+", "+U+")\n"+TEST() ;
+			return "P = " + P + " \nQ = " + Q+" \nM = "+M+" \nClé publique = ("+N+","+C+")\nPGCD = "+gcd+"\nClé Privé = ("+N+", "+U+")\n" ;
 		}
 		
 }
