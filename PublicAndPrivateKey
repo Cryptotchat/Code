@@ -1,5 +1,6 @@
 import java.math.BigInteger;
 import java.util.Random;
+import java.util.Scanner;
 
 public class PublicAndPrivateKey {
 	
@@ -13,10 +14,11 @@ public class PublicAndPrivateKey {
 	private BigInteger bi;
 	private BigInteger Min;
 	
+	private static String sc;
+	
 	public PublicAndPrivateKey(){
 		genererNombre();
 		trouverU();
-		TEST();
 	}
 	
 	/* -------------------- GENERATION CLÉ PUBLIQUE ------------------------------------------------- */
@@ -33,7 +35,7 @@ public class PublicAndPrivateKey {
 		else
 			Min = P;
 		
-			bi = new BigInteger(8, new Random());
+			bi = new BigInteger(64, new Random());
 			C = bi.mod(M);
 			System.out.println(C);
 			gcd = M.gcd(C);
@@ -44,13 +46,13 @@ public class PublicAndPrivateKey {
 		public BigInteger genererPremier() {
 
 		      BigInteger p1;
-		      int bitLength = 8;
+		      int bitLength = 64;
 		      Random rnd = new Random();
 		      p1 = BigInteger.probablePrime(bitLength, rnd);
 		      return p1;
 	}
 	
-		/* ------- CLÉ PRIVÉE ------- */
+		/* -------------------- GENERATION CLÉ PRIVÉE ------------------------------------------------- */
 		public void trouverU() {
 			BigInteger x = new BigInteger("0");
 			BigInteger y = new BigInteger("1");
@@ -84,6 +86,7 @@ public class PublicAndPrivateKey {
 			TEST();
 		}
 		
+		/* -------------------- TEST DU PROGRAMME ------------------------------------------------- */
 		public void TEST() {
 			BigInteger BASE = new BigInteger("66");
 			BigInteger RES;
@@ -100,7 +103,7 @@ public class PublicAndPrivateKey {
 			}	
 		}
 		
-		
+		/* -------------------- CHIFFREMENT ------------------------------------------------- */
 		public static BigInteger chiffrer() {
 			BigInteger ch1 = new BigInteger("66");
 			BigInteger ch2;
@@ -108,7 +111,8 @@ public class PublicAndPrivateKey {
 			System.out.println("message à chiffrer : "+ch1);
 			return ch2;
 		}
-
+		
+		/* -------------------- DÉCHIFFREMENT ------------------------------------------------- */
 		public static BigInteger dechiffrer() {
 			BigInteger de1 = chiffrer();
 			BigInteger de2;
@@ -121,8 +125,23 @@ public class PublicAndPrivateKey {
 			return chiffrer();
 		}
 		
+		/* -------------------- BigInteger to String to ASCII ------------------------------------------------- */
+		public String ascii(){
+			sc = dechiffrer().toString();
+			while (sc.length() % 3 != 0)
+		    {
+		        sc = '0' + sc;
+		    }
+		    String result = "";
+		    for (int i = 0; i < sc.length(); i += 3)
+		    {
+		        result += (char)(Integer.parseInt(sc.substring(i, i + 3)));
+		    }
+		    return result;
+		}
+		
 		public String toString(){
-			return "P = " + P + " \nQ = " + Q+" \nM = "+M+" \nClé publique = ("+N+","+C+")\nPGCD = "+gcd+"\nClé Privé = ("+N+", "+U+")\n" ;
+			return "P = " + P + " \nQ = " + Q+" \nM = "+M+" \nClé publique = ("+N+","+C+")\nPGCD = "+gcd+"\nClé Privé = ("+N+", "+U+")\n"+ascii() ;
 		}
 		
 }
