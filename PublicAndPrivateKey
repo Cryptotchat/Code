@@ -1,0 +1,127 @@
+import java.math.BigInteger;
+import java.util.Random;
+
+public class PublicAndPrivateKey {
+	
+	private static BigInteger P;
+	private static BigInteger Q;
+	private static BigInteger C;
+	private static BigInteger N;
+	private static BigInteger M;
+	private static BigInteger U;
+	private static BigInteger gcd;
+	private BigInteger bi;
+	private BigInteger Min;
+	
+	public PublicAndPrivateKey(){
+		genererNombre();
+		trouverU();
+		TEST();
+	}
+	
+	/* -------------------- GENERATION CLÉ PUBLIQUE ------------------------------------------------- */
+	public void genererNombre() {
+		
+		do {
+		P = genererPremier();
+		Q = genererPremier();
+		N = P.multiply(Q);
+		M = P.subtract(new BigInteger("1")).multiply(Q.subtract(new BigInteger("1")));
+		
+		if (P.compareTo(Q) <= 0)
+			Min = Q;
+		else
+			Min = P;
+		
+			bi = new BigInteger(8, new Random());
+			C = bi.mod(M);
+			System.out.println(C);
+			gcd = M.gcd(C);
+				
+		}while (gcd.compareTo(new BigInteger("1")) != 0 || bi.compareTo(Min)<=0 || bi.compareTo(M)>=0);
+		}
+	
+		public BigInteger genererPremier() {
+
+		      BigInteger p1;
+		      int bitLength = 8;
+		      Random rnd = new Random();
+		      p1 = BigInteger.probablePrime(bitLength, rnd);
+		      return p1;
+	}
+	
+		/* ------- CLÉ PRIVÉE ------- */
+		public static void trouverU() {
+			BigInteger x = new BigInteger("0");
+			BigInteger y = new BigInteger("1");
+			BigInteger m = M;
+			BigInteger n = m;
+			BigInteger c = C;
+			BigInteger lastx = new BigInteger("1");
+			BigInteger lasty = new BigInteger("0");
+			BigInteger temp;
+	        do{
+	            BigInteger q = c.divide(n);
+	            BigInteger r = c.remainder(n);
+	 
+	            c = n;
+	            n = r;
+	 
+	            temp = x;
+	            x = lastx.subtract(q.multiply(x));
+	            lastx = temp;
+	 
+	            temp = y;
+	            y = lasty.subtract(q.multiply(y));
+	            lasty = temp;            
+	        
+	        }while (n.compareTo(new BigInteger("0"))>0);
+	       
+	        if (lastx.compareTo(new BigInteger("0"))<=0) {
+	        	lastx = lastx.subtract(m.multiply(new BigInteger("-1")));
+	        }
+			U = lastx;
+		}
+		
+		public String TEST() {
+			BigInteger BASE = new BigInteger("66");
+			BigInteger RES;
+			BigInteger RES2;
+			
+			RES = BASE.modPow(C, N);
+			System.out.println("ch2 = "+RES);
+			RES2 = RES.modPow(U,N);
+			System.out.println("de2 = " + RES2);
+			if (RES2.compareTo(new BigInteger("66")) != 0) {
+				PublicAndPrivateKey();
+				return "erreur";}
+			return "bon";
+			
+		}
+		
+		
+		public static BigInteger chiffrer() {
+			BigInteger ch1 = new BigInteger("66");
+			BigInteger ch2;
+			ch2 = ch1.modPow(C, N);
+			System.out.println("message à chiffrer : "+ch1);
+			return ch2;
+		}
+
+		public static BigInteger dechiffrer() {
+			BigInteger de1 = chiffrer();
+			BigInteger de2;
+			de2 = de1.modPow(U,N);
+			
+			return de2;
+		}
+		
+		public static BigInteger getMessage() {
+			return chiffrer();
+		}
+		
+		public String toString(){
+			return "P = " + P + " \nQ = " + Q+" \nM = "+M+" \nClé publique = ("+N+","+C+")\nPGCD = "+gcd+"\nClé Privé = ("+N+", "+U+")\n"+TEST() ;
+		}
+		
+}
