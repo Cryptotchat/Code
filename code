@@ -13,6 +13,9 @@ public class code {
 	private static String A;
 	private static String B;
 
+	
+	/* -------------------- Récuperation des clés ------------------------------------------------- */
+	
 	public static void recuperationPublicKey() {		
 		try
 		{
@@ -83,10 +86,10 @@ public class code {
 	public code() {
 	}
 
-	public static String chiffrer() {
+	/* -------------------- CHIFFREMENT ------------------------------------------------- */
+	public static String chiffrer(String scan) {
 		recuperationPublicKey();
 		String m1 = "";
-		String scan = "Merci Quentin !";
 		BigInteger ch1;
 		BigInteger ch2;
 		for(int i=0;i<scan.length();i++) {
@@ -94,39 +97,38 @@ public class code {
 
 			ch1 = new BigInteger(m0);
 			ch2 = ch1.modPow(C, N);
-			m1 = m1+ch2.toString()+"!";
+			m1 = m1+ch2.toString()+"O";
 
 		}
 
 		return m1;
 	}
 
-
-	public static String dechiffrer() {
+	/* -------------------- DÉCHIFFREMENT ------------------------------------------------- */
+	public static String dechiffrer(String de1) {
 		recuperationPrivateKey();
-		String de1 = chiffrer();
+		String de3 = "";
 		String de4 = "";
-		String de5 = "";
 		BigInteger de2;
 		System.out.println("message recu = "+de1);
 		
-		String[] parts = de1.split("!");
+		String[] parts = de1.split("O");
 		for (String part: parts) {
 		    de2 = new BigInteger(part);
 		    de2 = de2.modPow(U,N);
-			de4 = de2.toString();
+			de3 = de2.toString();
 			
-			if (de4.length() % 3 != 0)
+			if (de3.length() % 3 != 0)
 			{
-				de4 = '0' + de4;
+				de3 = '0' + de3;
 			}
-			de5 = de5 +de4;
+			de4 = de4 +de3;
 				
 		}
 		String result = "";
-		for (int i = 0; i < de5.length(); i += 3)
+		for (int i = 0; i < de4.length(); i += 3)
 		{
-			result += (char)(Integer.parseInt(de5.substring(i, i + 3)));
+			result += (char)(Integer.parseInt(de4.substring(i, i + 3)));
 		}
 		return result;
 	}
