@@ -1,0 +1,142 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import static java.awt.Color.black;
+
+public class IntGraph extends JFrame {
+
+    public final static int XDIM = 400;
+    public final static int YDIM = (int) XDIM * 2 - 150;
+
+    public ChatClient chatclient;
+    public ChatLancementServeur chatlancementserveur;
+    public ServerInt serverint;
+
+    JPanel conteneur1 = new JPanel();
+    JPanel conteneur2 = new JPanel();
+    JLabel cryptochat = new JLabel("Cryptochat");
+    JLabel ndc = new JLabel("nom de compte");
+    JLabel temps = new JLabel();
+    JTextField textndc = new JTextField(" aa ");
+    JLabel mdp = new JLabel("mot de passe");
+    JPasswordField textmdp = new JPasswordField(" ee ");
+    JButton seconnecter = new JButton("se connecter");
+    JButton creercompte = new JButton("se créer un compte");
+
+    PageCreationCompte pcc = new PageCreationCompte();
+    PageChat pc = new PageChat();
+
+
+    public IntGraph() {
+        this.PageDeConnexion();
+    }
+
+    private void PageDeConnexion() {
+
+        super.setTitle("Cryptochat");
+        super.setLayout(new FlowLayout());
+
+        conteneur2.add(ndc);
+        conteneur2.add(textndc);
+        conteneur2.add(mdp);
+        conteneur2.add(textmdp);
+        conteneur2.add(seconnecter);
+        conteneur2.add(creercompte);
+        conteneur2.setLayout(new GridLayout(6, 1, 5, 40));
+        conteneur2.setBackground(Color.gray);
+
+
+        //conteneur1.add(temps, BorderLayout.SOUTH);
+        //conteneur1.add(cryptochat, BorderLayout.SOUTH);
+
+        super.add(conteneur2);
+        super.add(conteneur1);
+        super.setBackground(Color.gray);
+        super.setSize(XDIM, YDIM);
+        super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        super.setResizable(false);
+        super.setVisible(true);
+
+        super.setSize(XDIM, YDIM);
+        super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        super.setVisible(true);
+
+        this.heure();
+        System.out.println(textmdp.getText());
+
+        creercompte.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                pcc.setVisible(true);
+            }
+        });
+
+
+        seconnecter.addActionListener((new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Authentification(textndc.getText(),textmdp.getText());
+            }
+
+        }));
+
+        seconnecter.addActionListener((new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                connexion();
+            }
+
+        }));
+    }
+
+    private void heure() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Calendar cal = Calendar.getInstance();
+        System.out.println(dateFormat.format(cal.getTime()));
+        temps.setText(dateFormat.format(cal.getTime()));
+    }
+
+    public static void main(String[] args) {
+        new IntGraph();
+    }
+
+    public void connexion(){
+        chatclient = new ChatClient();
+        try {
+            serverint=(ServerInt)Naming.lookup("client");
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        System.out.println(serverint+"s'est connecté");
+    }
+
+    public void Authentification(String ndc, String mdp) {
+        if (ndc.equals("corentin") || mdp.equals("vachon")) {
+            System.out.println("vous allez vous connecter");
+            pc.setVisible(true);
+            textmdp.setText("");
+            textndc.setText("");
+            super.dispose();
+
+
+        }
+    }
+
+    public void rendreVisible(boolean b) {
+        if(b=true){
+            this.setVisible(true);
+
+        }
+    }
+}
