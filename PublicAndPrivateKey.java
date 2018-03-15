@@ -1,3 +1,4 @@
+package okok;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -16,7 +17,8 @@ public class PublicAndPrivateKey {
 	private static BigInteger gcd;
 	private BigInteger bi;
 	private BigInteger Min;
-
+	private final static int bit = 64;
+	
 	public PublicAndPrivateKey(){
 		PublicKey();
 		PrivateKey();
@@ -36,7 +38,7 @@ public class PublicAndPrivateKey {
 			else
 				Min = P;
 
-			bi = new BigInteger(8, new Random());
+			bi = new BigInteger(bit, new Random());
 			C = bi.mod(M);
 			System.out.println("C = "+C);
 			gcd = M.gcd(C);
@@ -44,7 +46,7 @@ public class PublicAndPrivateKey {
 		}while (gcd.compareTo(new BigInteger("1")) != 0 || bi.compareTo(Min)<=0 || bi.compareTo(M)>=0);
 		
 		// Création du fichier texte pour le programme
-		File fichierTexte = new File ("D:\\Clément\\Desktop\\PublicKey.txt");
+		File fichierTexte = new File ("C:\\Users\\admin\\Desktop\\PublicKey.txt");
 		FileWriter ecrireFichier;
 		
 		try{
@@ -65,9 +67,8 @@ public class PublicAndPrivateKey {
 
 	public BigInteger genererPremier() {
 		BigInteger p1;
-		int bitLength = 8;
 		Random rnd = new Random();
-		p1 = BigInteger.probablePrime(bitLength, rnd);
+		p1 = BigInteger.probablePrime(bit, rnd);
 		return p1;
 	}
 
@@ -104,7 +105,7 @@ public class PublicAndPrivateKey {
 		U = lastx;
 		TEST();
 		// Création du fichier texte pour le programme
-				File fichierTexte = new File ("D:\\Clément\\Desktop\\PrivateKey.txt");
+				File fichierTexte = new File ("C:\\Users\\admin\\Desktop\\PrivateKey.txt");
 				// Création de "l'écrivain"
 				FileWriter ecrireFichier;
 				
