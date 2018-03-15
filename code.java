@@ -1,3 +1,4 @@
+package okok;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,6 +13,7 @@ public class code {
 	private static BigInteger U;
 	private static String A;
 	private static String B;
+	private final static String wall = "O";
 
 	
 	/* -------------------- Récuperation des clés ------------------------------------------------- */
@@ -19,7 +21,7 @@ public class code {
 	public static void recuperationPublicKey() {		
 		try
 		{
-			File f = new File ("D:\\Clément\\Desktop\\PublicKey.txt");
+			File f = new File ("C:\\Users\\admin\\Desktop\\PublicKey.txt");
 			FileReader fr = new FileReader (f);
 			BufferedReader br = new BufferedReader (fr);
 
@@ -53,7 +55,7 @@ public class code {
 
 		try
 		{
-			File f = new File ("D:\\Clément\\Desktop\\PrivateKey.txt");
+			File f = new File ("C:\\Users\\admin\\Desktop\\PrivateKey.txt");
 			FileReader fr = new FileReader (f);
 			BufferedReader br = new BufferedReader (fr);
 
@@ -97,7 +99,7 @@ public class code {
 
 			ch1 = new BigInteger(m0);
 			ch2 = ch1.modPow(C, N);
-			m1 = m1+ch2.toString()+"O";
+			m1 = m1+ch2.toString()+wall;
 
 		}
 
@@ -112,7 +114,7 @@ public class code {
 		BigInteger de2;
 		System.out.println("message recu = "+de1);
 		
-		String[] parts = de1.split("O");
+		String[] parts = de1.split(wall);
 		for (String part: parts) {
 		    de2 = new BigInteger(part);
 		    de2 = de2.modPow(U,N);
