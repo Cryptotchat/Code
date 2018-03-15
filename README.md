@@ -1,3 +1,2 @@
 # Code
-Programme
-BOUGEZ VOUS
+We are the CryptoChat band
