@@ -17,7 +17,7 @@ public class PublicAndPrivateKey {
 	private static BigInteger gcd;
 	private BigInteger bi;
 	private BigInteger Min;
-	private final static int bit = 64;
+	private final static int bit = 2048;
 	
 	public PublicAndPrivateKey(){
 		PublicKey();
@@ -53,8 +53,8 @@ public class PublicAndPrivateKey {
 			// Instanciation de l'objet ecrireFichier qui va écrire dans fichierTexte.txt
 			ecrireFichier = new FileWriter(fichierTexte);
 			// Écriture d'une chaîne de caractères dans le fichier texte
-			String A = N.toString();
-			String B = C.toString();
+			String A = N.toString(16);
+			String B = C.toString(16);
 			ecrireFichier.write(A+"\r\n"+B);
 			// "Fermeture" du FileWriter
 			ecrireFichier.close();
@@ -113,8 +113,9 @@ public class PublicAndPrivateKey {
 					// Instanciation de l'objet ecrireFichier qui va écrire dans fichierTexte.txt
 					ecrireFichier = new FileWriter(fichierTexte);
 					// Écriture d'une chaîne de caractères dans le fichier texte
-					String A = N.toString();
-					String B = U.toString();
+					/*String A = N.toString();*/
+					String A = N.toString(16);
+					String B = U.toString(16);
 					ecrireFichier.write(A+"\r\n"+B);
 					// "Fermeture" du FileWriter
 					ecrireFichier.close();
