@@ -37,8 +37,9 @@ public class code {
 				B=line;
 				br.close();
 				fr.close();
-				N = new BigInteger(A);
-				C = new BigInteger(B);
+				
+				N = new BigInteger(A ,16);
+				C = new BigInteger(B ,16);
 			}
 			catch (IOException exception)
 			{
@@ -71,8 +72,9 @@ public class code {
 				B=line;
 				br.close();
 				fr.close();
-				N = new BigInteger(A);
-				U = new BigInteger(B);
+				N = new BigInteger(A ,16);
+				U = new BigInteger(B ,16);
+				
 			}
 			catch (IOException exception)
 			{
