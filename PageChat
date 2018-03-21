@@ -1,0 +1,156 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.math.BigInteger;
+import java.util.Vector;
+
+public class PageChat extends JFrame {
+	
+	  private ChatClient client;
+	  private ChatServerInt serverInt;
+	  private ChatServer server;
+	  private PublicAndPrivateKey papk;
+	  private BigInteger nclepr;
+	  private BigInteger cclepr;
+	  private BigInteger uclepr;
+	  
+	  private BigInteger abc;
+	  private Vector<BigInteger> vectorabc;
+	  private BigInteger ncourant;
+	  private BigInteger ccourant;
+	  Vector<String> listecontact = new Vector<String>();
+	 
+    JFrame m;
+
+    JPanel pChat = new JPanel();
+    JPanel pSend = new JPanel();
+    JPanel pList = new JPanel();
+
+    JTextField txtMsg = new JTextField("Parlez ici");
+    JButton btnSend = new JButton("Envoyer");
+
+    JButton btnFermer = new JButton("Actualiser");
+
+    JTextArea chatBox = new JTextArea();
+
+    JLabel txt = new JLabel("Connexion avec ");
+    JComboBox boxList = new JComboBox();
+
+    ChatUI a;
+
+    public PageChat() {
+        this.setSize(ChatUI.XDIM, ChatUI.YDIM);
+        this.setTitle("Chat");
+        this.setVisible(false);
+        this.setResizable(false);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLocationRelativeTo(null);
+
+        pSend.setBackground(Color.gray);
+        pList.setBackground(Color.gray);
+        txtMsg.setForeground(Color.gray);
+
+        chatBox.setEditable(false);
+        chatBox.setLineWrap(true);
+
+        pChat.setLayout(new BorderLayout());
+
+        txtMsg.setPreferredSize(new Dimension(200, 40));
+        btnSend.setPreferredSize(new Dimension(80, 40));
+
+        btnFermer.setPreferredSize(new Dimension(100, 20));
+        boxList.setPreferredSize(new Dimension(120, 20));
+
+
+        pSend.add(txtMsg);
+        pSend.add(btnSend);
+
+        pList.add(txt);
+        pList.add(boxList);
+        pList.add(btnFermer);
+
+        pChat.add(pList, BorderLayout.NORTH);
+        pChat.add(chatBox, BorderLayout.CENTER);
+        pChat.add(pSend, BorderLayout.SOUTH);
+        
+        this.setContentPane(pChat);
+
+        this.setVisible(true);
+
+        // -------------------------------Hints----------------------------------
+
+        txtMsg.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                JTextField texteField = ((JTextField) e.getSource());
+                texteField.setText("");
+                texteField.getFont().deriveFont(Font.PLAIN);
+                texteField.setForeground(Color.black);
+                texteField.removeMouseListener(this);
+            }
+        });
+
+        // -------------------------------Buttons----------------------------------
+
+        btnFermer.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	
+             /*   PageChat.this.setVisible(false);
+                PageChat.this.dispose();
+                ChatUI a = new ChatUI();*/
+            }
+        });
+
+    }
+    
+    public void ajoutecontact(String S) {
+    		listecontact.add(S);
+	for (int i = 0; i < listecontact.size(); i++) {
+			if (S.equals(listecontact.get(i)) ){
+            System.out.println("contact déja existant");
+        }
+}
+		boxList.addItem(S);
+}
+    
+    public void sendText(){
+          String st=txtMsg.getText();
+          Code.chiffrer(st,ncourant, ccourant );
+          txtMsg.setText("");
+          try{
+        	  	serverInt.envoie(st);
+      	  	}catch(Exception e){e.printStackTrace();}
+      }
+    
+    public void redige(String st){
+  	  txtMsg.setText(txtMsg.getText()+"\n"+st);
+  	  }
+
+    public static void main(String[] args){
+        PageChat a = new PageChat();
+    }
+
+	public void setServ(ChatServerInt serverInt2) {
+		this.serverInt = serverInt2;
+	}
+
+}
