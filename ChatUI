@@ -1,0 +1,306 @@
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.lang.reflect.Array;
+import java.rmi.*;
+import java.text.*;
+import java.util.*;
+import java.math.*;
+
+public class ChatUI extends JFrame{
+
+	public final static int XDIM = 350;			// dimension X
+	public final static int YDIM = 350*2-150;		// dimension en Y
+
+	private ChatClient client;		// lien vers le ChatClient
+	public ChatServerInt serverInt;		// lien vers le serveur
+	private PublicAndPrivateKey papk;
+
+	private BigInteger nclepr;		//
+	private BigInteger cclepr;		//		Ici sont stockées le N, C et U 
+	private BigInteger uclepr;		// 
+
+	private Vector<BigInteger> vectorcpub;	// vecteur qui appele le serveur et lui demande c
+	private Vector<BigInteger> vectornpub;	//  vecteur qui appele le serveur et lui demande n
+
+
+	private BigInteger ncourant;		// n de la personne avec qui l'utilisateur est actuellement en train de parler
+	private BigInteger ccourant;		// c de la personne avec qui lutilisateur est actuellement en train de parler
+
+	PageChat pagechat = new PageChat();		// lien vers la seconde page du chat
+
+	JFrame f;	// appele d'une JFrame
+
+	JPanel p = new JPanel();		//
+	JPanel pT = new JPanel();	//	création de Jpannel --> conteneur
+	JPanel pB = new JPanel();	//
+
+	JLabel lbNc = new JLabel("Pseudo", SwingConstants.CENTER); //
+	JTextField name = new JTextField("Votre nom");			 //
+	JLabel lbMdp = new JLabel("IP", SwingConstants.CENTER);    //		
+	JTextField ip = new JTextField("IP du serveur");		     //		Création de différents éléments
+	JButton btCn = new JButton("Se connecter");		         //
+	JButton btCc = new JButton("Créer un compte");	        //
+	JLabel temps = new JLabel();  							//
+	JLabel cryptochat = new JLabel("Cryptochat");				//
+
+	ShowImage imgLogo = new ShowImage("logo.png");	// appel d'une image
+
+	// -------------- Début de l'application -------------- //
+
+	public static void main(String [] args){
+		System.out.println("Hello World !");
+		ChatUI c=new ChatUI();
+	}  
+
+	// -------------- Récupération des clefs -------------- //
+
+	private void genereCle(BigInteger ncle, BigInteger ccle, BigInteger ucle) {	// ajoute les clées dans les variables courrantes
+		this.nclepr = ncle;
+		this.cclepr = ccle;
+		this.uclepr = ucle;
+	}
+
+	public void envoieCle(BigInteger nclpr, BigInteger cclrpr, BigInteger uclr) {		// Création des clefs et les envoie au serveur pour qu'il les publie
+		try {
+			System.out.println("----");
+			serverInt.publicationClé(nclpr, cclrpr, uclr, name.getText());
+			pagechat.setVisible(true);
+			f.dispose();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void PriseDesClefs(String pseudo) throws RemoteException {		//   récupére les clefs de la personne avec qui on veut parler
+		vectorcpub = serverInt.getListeclefpublicc();		//
+		vectornpub = serverInt.getListeclefpublicn();		//	On est obligé de créer un nouveau vecteur et de lui dire d'être égal au vecteur de la classe serveur sinon on ne peut pas le manipuler
+		for (int i = 0; i < serverInt.getListeNom().size(); i++) {
+			if (serverInt.getListeNom().get(i).equals(pseudo)) {
+				ncourant =  vectornpub.get(i);
+				ccourant = vectorcpub.get(i);
+			}
+		} 
+	}
+
+	// -------------- Interface Graphique -------------- //
+	public ChatUI(){
+		this.PageDeConnexion();
+	}
+
+	private void PageDeConnexion() {
+
+		f = new JFrame("Cryptochat");
+		f.setSize(XDIM, YDIM);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setResizable(false);
+		f.setVisible(true);
+		f.setLocationRelativeTo(null);
+
+		lbNc.setForeground(Color.orange);
+		lbMdp.setForeground(Color.orange);
+		name.setForeground(Color.gray);
+		name.getFont().deriveFont(Font.ITALIC);
+		ip.setForeground(Color.gray);
+
+		super.setTitle("Cryptochat");
+		super.setLayout(new FlowLayout());
+
+		super.getContentPane().add(imgLogo);
+
+		p.add(imgLogo);
+		p.add(lbNc);
+		p.add(name);
+		p.add(lbMdp);
+		p.add(ip);
+
+		p.setLayout(new GridLayout(7, 1, 5, 10));
+		p.setBackground(Color.gray);
+
+		pT.add(temps);
+		pT.add(cryptochat);
+		pT.setBackground(Color.gray);
+
+		pB.add(btCn);
+		pB.add(btCc);
+		pB.setLayout(new GridLayout(1, 2));
+
+		p.add(pB);
+		p.add(pT);
+
+		f.add(p);
+
+		this.heure();
+		System.out.println(ip.getText());
+
+		// -------------------------------Hints----------------------------------
+
+		name.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				JTextField texteField = ((JTextField) e.getSource());
+				texteField.setText("");
+				texteField.getFont().deriveFont(Font.PLAIN);
+				texteField.setForeground(Color.black);
+				texteField.removeMouseListener(this);
+			}
+		});
+
+		ip.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				JTextField texteField = ((JTextField) e.getSource());
+				texteField.setText("");
+				texteField.getFont().deriveFont(Font.PLAIN);
+				texteField.setForeground(Color.black);
+				texteField.removeMouseListener(this);
+			}
+		});
+
+		// -----------------------Buttons------------------------------
+
+		btCc.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				f.dispose();
+			}
+		});
+
+		btCn.addActionListener((new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Authentification(name.getText());
+				} catch (RemoteException e1) {
+					e1.printStackTrace();
+				}
+			}
+
+		}));
+
+	}
+
+    // -------------- Création de l'authentification -------------- //
+
+
+    public void Authentification(String lbNc) throws RemoteException {
+        System.out.println("vous allez vous connecter");
+        pagechat.ajoutecontact(name.getText());	// si l'utilisateur n'ai pas reconnu par le serveur, alors il est ajouté dans les contacts
+        pagechat.setVisible(true);
+        this.dispose();
+        connexion();
+        serverInt.ajoutecontact(lbNc);
+
+
+    }
+	// -------------- Gestion de l'image logo -------------- //
+	
+	public class ShowImage extends JPanel {
+		BufferedImage image;
+
+		public ShowImage(String chemin) {
+			try {
+
+				File input = new File(chemin);
+				image = ImageIO.read(input);
+
+			} catch (IOException ie) {
+				System.out.println("Error:" + ie.getMessage());
+			}
+		}
+
+		public void paint(Graphics g) {
+			g.drawImage(image, 155, 0, null);
+		}
+	}
+
+	// -------------- Gestion de l'heure (static) -------------- //
+
+	
+	private void heure() {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		System.out.println(dateFormat.format(cal.getTime()));
+		temps.setText(dateFormat.format(cal.getTime()));
+	}
+
+	// -------------- connexion et création des clefs  -------------- //
+	
+	public void connexion(){
+		PublicAndPrivateKey papk = new PublicAndPrivateKey();
+		String chainecasse = papk.toString();	// appele de la méthode qui permet de créer les u
+		String[] listedecle = chainecasse.split(" ");
+		BigInteger ncle = new BigInteger(listedecle[0]);		// 
+		BigInteger ccle = new BigInteger(listedecle[1]);		//	ajout des n, c, u dans des listes
+		BigInteger ucle = new BigInteger(listedecle[2]);		//
+		System.out.println(ncle);
+		this.genereCle(ncle, ccle, ucle);
+
+		if (name.getText().length()<2){JOptionPane.showMessageDialog(f, "rentrez un nom"); return;}
+		try{
+			System.out.println("1");
+			client=new ChatClient(name.getText());	// si les tests sont réussis, on appelle la méthode
+			System.out.println("2");
+			client.setGUI(this);
+			System.out.println("3");
+			serverInt=(ChatServerInt)Naming.lookup("rmi://127.0.0.1:10000/myabc");
+			System.out.println("le RMI a marché ");
+			serverInt.seConnecter(client);
+			System.out.println("5");
+			this.envoieCle(ncle, ccle, ucle);
+			System.out.println("6");
+			pagechat.setServ(serverInt);
+			System.out.println("7");
+		}catch(Exception e){e.printStackTrace();JOptionPane.showMessageDialog(f, "Probleme de connexion");}	  }
+
+
+	public void writeMsg(String st) {
+        st = Code.dechiffrer(st, nclepr, uclepr);
+        pagechat.redige(st);
+	}
+
+	public void writeMsgSystem(String st) {
+        st = Code.dechiffrer(st, nclepr, uclepr);
+        pagechat.redige(st);
+	}
+
+
+
+}
+
