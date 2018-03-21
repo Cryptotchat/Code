@@ -1,28 +1,17 @@
-import java.rmi.Naming;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
-
-public class ChatLancementServeur {
-
-    public final static int DPORT = 10000;
-
-    public ChatLancementServeur(){
-        IntGraph graph = new IntGraph();
-
-    }
-
-
-    public static void main(String[] args){
-        try {
-            ServerInt server = new Server();
-            Registry registry = LocateRegistry.createRegistry(DPORT);
-            registry.rebind("client", server); // publie notre instance sous le nom "Add"
-            System.out.println("serveur en écoute sur le port : "+DPORT);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+import java.rmi.*;
+ 
+public class StartServer {
+	public static void main(String[] args) {
+		try {
+				java.rmi.registry.LocateRegistry.createRegistry(10000);
+			 	System.out.println( "--");
+				ChatServerInt b=new ChatServer();
+			 	System.out.println( "--");
+				Naming.rebind("rmi://127.0.0.1:10000/myabc", b);
+			 	System.out.println( "--");
+				System.out.println("[System] pret");
+			}catch (Exception e) {
+					System.out.println(e);
+			}
+	}
 }
