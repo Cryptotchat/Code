@@ -18,12 +18,12 @@ public class PublicAndPrivateKey {
 	private BigInteger Min;
 
 	public PublicAndPrivateKey(){
-		PublicKey();
-		PrivateKey();
+		genererNombre();
+		trouverU();
 	}
 
 	/* -------------------- GENERATION CLÉ PUBLIQUE ------------------------------------------------- */
-	public void PublicKey() {
+	public void genererNombre() {
 
 		do {
 			P = genererPremier();
@@ -38,32 +38,18 @@ public class PublicAndPrivateKey {
 
 			bi = new BigInteger(8, new Random());
 			C = bi.mod(M);
-			System.out.println("C = "+C);
+			//System.out.println(C);
 			gcd = M.gcd(C);
 
 		}while (gcd.compareTo(new BigInteger("1")) != 0 || bi.compareTo(Min)<=0 || bi.compareTo(M)>=0);
 		
-		// Création du fichier texte pour le programme
-		File fichierTexte = new File ("D:\\Clément\\Desktop\\PublicKey.txt");
-		FileWriter ecrireFichier;
-		
-		try{
-			// Instanciation de l'objet ecrireFichier qui va écrire dans fichierTexte.txt
-			ecrireFichier = new FileWriter(fichierTexte);
-			// Écriture d'une chaîne de caractères dans le fichier texte
-			String A = N.toString(16);
-			String B = C.toString(16);
-			ecrireFichier.write(A+"\r\n"+B);
-			// "Fermeture" du FileWriter
-			ecrireFichier.close();
-		}catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+
+
 	}
 
 	public BigInteger genererPremier() {
+
 		BigInteger p1;
 		int bitLength = 8;
 		Random rnd = new Random();
@@ -72,7 +58,7 @@ public class PublicAndPrivateKey {
 	}
 
 	/* -------------------- GENERATION CLÉ PRIVÉE ------------------------------------------------- */
-	public void PrivateKey() {
+	public void trouverU() {
 		BigInteger x = new BigInteger("0");
 		BigInteger y = new BigInteger("1");
 		BigInteger m = M;
@@ -103,25 +89,6 @@ public class PublicAndPrivateKey {
 		}
 		U = lastx;
 		TEST();
-		// Création du fichier texte pour le programme
-				File fichierTexte = new File ("D:\\Clément\\Desktop\\PrivateKey.txt");
-				// Création de "l'écrivain"
-				FileWriter ecrireFichier;
-				
-				try{
-					// Instanciation de l'objet ecrireFichier qui va écrire dans fichierTexte.txt
-					ecrireFichier = new FileWriter(fichierTexte);
-					// Écriture d'une chaîne de caractères dans le fichier texte
-					String A = N.toString(16);
-					String B = U.toString(16);
-					ecrireFichier.write(A+"\r\n"+B);
-					// "Fermeture" du FileWriter
-					ecrireFichier.close();
-				}catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
 
 	}
 
@@ -132,13 +99,13 @@ public class PublicAndPrivateKey {
 		BigInteger RES2;
 
 		RES = BASE.modPow(C, N);
-		System.out.println("ch2 = "+RES);
+		//System.out.println("ch2 = "+RES);
 		RES2 = RES.modPow(U,N);
-		System.out.println("de2 = " + RES2);
+		//System.out.println("de2 = " + RES2);
 		if (RES2.compareTo(new BigInteger("66")) != 0) {
-			PublicKey();
+			genererNombre();
 			genererPremier();
-			PrivateKey();
+			trouverU();
 		}	
 	}
 
@@ -146,7 +113,7 @@ public class PublicAndPrivateKey {
 
 	/* -------------------- ToString ------------------------------------------------- */
 	public String toString(){
-		return "P = " + P + " \nQ = " + Q+" \nM = "+M+" \nClé publique = ("+N+","+C+")\nClé Privé = ("+N+", "+U+")\n";
+		return N+" "+C+" "+U;
 	}
 
 }
