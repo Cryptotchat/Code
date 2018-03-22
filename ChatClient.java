@@ -12,10 +12,14 @@ public class ChatClient  extends UnicastRemoteObject implements ChatClientInt{
 	public ChatClient (String n) throws RemoteException {
 		name=n;
 		}
-	
-	public void tell(String st) throws RemoteException{
+
+	public String toString(){
+		return this.name;
+	}
+
+	public void tell(String st, BigInteger n, BigInteger u, String a, String m) throws RemoteException{
 		System.out.println(st);
-		ui.writeMsg(st);
+		ui.writeMsg(st, n, u, a, m);
 	}
 	public String getName() throws RemoteException{
 		return name;
@@ -24,11 +28,7 @@ public class ChatClient  extends UnicastRemoteObject implements ChatClientInt{
 	public void setGUI(ChatUI t){ 
 		ui=t ; 
 	}
-	
-	public void recupereContact() {
-		
-	}
-
 
 }
+
 
