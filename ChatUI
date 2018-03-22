@@ -33,7 +33,7 @@ public class ChatUI extends JFrame{
 	private BigInteger ncourant;		// n de la personne avec qui l'utilisateur est actuellement en train de parler
 	private BigInteger ccourant;		// c de la personne avec qui lutilisateur est actuellement en train de parler
 
-	PageChat pagechat = new PageChat();		// lien vers la seconde page du chat
+	PageChat pagechat;		// lien vers la seconde page du chat
 
 	JFrame f;	// appele d'une JFrame
 
@@ -69,7 +69,7 @@ public class ChatUI extends JFrame{
 
 	public void envoieCle(BigInteger nclpr, BigInteger cclrpr, BigInteger uclr) {		// Création des clefs et les envoie au serveur pour qu'il les publie
 		try {
-			System.out.println("----");
+		    System.out.println("n envoyé au sereveur"+nclpr);
 			serverInt.publicationClé(nclpr, cclrpr, uclr, name.getText());
 			pagechat.setVisible(true);
 			f.dispose();
@@ -206,6 +206,8 @@ public class ChatUI extends JFrame{
 		btCn.addActionListener((new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+				    pagechat = new PageChat();
+				    pagechat.setVisible(true);
 					Authentification(name.getText());
 				} catch (RemoteException e1) {
 					e1.printStackTrace();
@@ -266,41 +268,35 @@ public class ChatUI extends JFrame{
 		PublicAndPrivateKey papk = new PublicAndPrivateKey();
 		String chainecasse = papk.toString();	// appele de la méthode qui permet de créer les u
 		String[] listedecle = chainecasse.split(" ");
-		BigInteger ncle = new BigInteger(listedecle[0]);		// 
+		BigInteger ncle = new BigInteger(listedecle[0]);		//
+        System.out.println("n aprés création"+ncle);
 		BigInteger ccle = new BigInteger(listedecle[1]);		//	ajout des n, c, u dans des listes
-		BigInteger ucle = new BigInteger(listedecle[2]);		//
-		System.out.println(ncle);
+        System.out.println("c aprés création"+ccle);
+        BigInteger ucle = new BigInteger(listedecle[2]);		//
+        System.out.println("u aprés création"+ucle);
 		this.genereCle(ncle, ccle, ucle);
 
 		if (name.getText().length()<2){JOptionPane.showMessageDialog(f, "rentrez un nom"); return;}
 		try{
-			System.out.println("1");
 			client=new ChatClient(name.getText());	// si les tests sont réussis, on appelle la méthode
-			System.out.println("2");
 			client.setGUI(this);
-			System.out.println("3");
 			serverInt=(ChatServerInt)Naming.lookup("rmi://127.0.0.1:10000/myabc");
-			System.out.println("le RMI a marché ");
 			serverInt.seConnecter(client);
-			System.out.println("5");
+			serverInt.ajouter(client);
 			this.envoieCle(ncle, ccle, ucle);
-			System.out.println("6");
 			pagechat.setServ(serverInt);
-			System.out.println("7");
-		}catch(Exception e){e.printStackTrace();JOptionPane.showMessageDialog(f, "Probleme de connexion");}	  }
+            serverInt.affiche();
+
+        }catch(Exception e){e.printStackTrace();JOptionPane.showMessageDialog(f, "Probleme de connexion");}	  }
 
 
-	public void writeMsg(String st) {
-        st = Code.dechiffrer(st, nclepr, uclepr);
-        pagechat.redige(st);
-	}
+	public void writeMsg(String st, BigInteger n, BigInteger u, String a, String m) {
+        pagechat.redige(st, n, u,  a, m);
 
-	public void writeMsgSystem(String st) {
-        st = Code.dechiffrer(st, nclepr, uclepr);
-        pagechat.redige(st);
-	}
-
+    }
 
 
 }
+
+
 
