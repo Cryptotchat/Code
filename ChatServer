@@ -6,34 +6,51 @@ import java.util.*;
 public class ChatServer  extends UnicastRemoteObject implements ChatServerInt{
 	
 	private Vector v=new Vector();
-	private Vector listeclefpublicn = new Vector();
-	private Vector listeclefpublicc = new Vector();
-	private Vector listeclefpriveeu = new Vector();
+	private Vector<BigInteger> listeclefpublicn = new Vector();
+	private Vector<BigInteger> listeclefpublicc = new Vector();
+	private Vector<BigInteger> listeclefpriveeu = new Vector();
 	public Vector listenom = new Vector();
 	public Vector listedecontact = new Vector();
-	
+	public Vector<ChatClientInt> listeclient = new Vector();
 	public ChatServer() throws RemoteException{}
 		
 	public boolean seConnecter(ChatClientInt client) throws RemoteException{
-		System.out.println(client.getName() + "  s'est connecté");
-		envoie(client.getName()+ " s'est connecté");
-		System.out.println("---");
+		System.out.println(client.getName() + "  s'est connecté \n");
+	/*	envoie(client.getName()+ " s'est connecté","");
+		System.out.println("---");*/
 		v.add(client);
 		return true;
-	}
+
+    }
 	
-	public void envoie(String s) throws RemoteException{
-	    System.out.println(s);
-		for(int i=0;i<v.size();i++){
-		    try{
-		    	ChatClientInt tmp=(ChatClientInt)v.get(i);
-			tmp.tell(s);
-		    }catch(Exception e){
-		    }
-		}
+	public void envoie(String s, String r, String m) throws RemoteException{
+	    System.out.println("s = "+s);
+	    System.out.println("liste client "+listenom);
+        for (ChatClientInt i:listeclient) {
+            i.tell(s, listeclefpublicn.elementAt(listenom.indexOf(r)), listeclefpriveeu.elementAt(listenom.indexOf(r)),r, m);
+        }
+
 	}
 
-	public Vector estConnecté() throws RemoteException {
+
+
+    @Override
+    public void ajouter(ChatClientInt a) throws RemoteException {
+        listeclient.add(a);
+        System.out.println(listeclient.toString());
+        System.out.println(a+" vient de se connecter \n");
+    }
+
+    @Override
+    public void affiche() throws RemoteException {
+        for (int i = 0; i < listenom.size();i++){
+            System.out.println("l'élément "+i+" est nommé : "+listenom.get(i)+"\n"+" il a pour n :"+listeclefpublicn.get(i)+"\n"+"il a pour c "+listeclefpublicc.get(i)+"\n"+"il a pour u"+this.listeclefpriveeu.get(i)+"\n");
+
+        }
+    }
+
+
+    public Vector estConnecté() throws RemoteException {
 		return null;
 	}
 
@@ -41,35 +58,39 @@ public class ChatServer  extends UnicastRemoteObject implements ChatServerInt{
 			listeclefpublicn.add(nclr);
 			listeclefpublicc.add(cclr);
 			listeclefpriveeu.add(uclr);
-			listenom.add(nom);		
+			listenom.add(nom);
+			System.out.println(listenom);
+			System.out.println(listeclefpublicc);
+
 	}
 
-	public Vector getListeclefpublicn() {
+	public Vector getListeclefpublicn() throws RemoteException {
 		return listeclefpublicn;
 	}
 
-	public void setListeclefpublicn(Vector listeclefpublicn) {
-		this.listeclefpublicn = listeclefpublicn;
-	}
-
-	public Vector getListeclefpublicc() {
+	public Vector getListeclefpublicc() throws RemoteException{
 		return listeclefpublicc;
 	}
 
-	public void setListeclefpublicc(Vector listeclefpublicc) {
-		this.listeclefpublicc = listeclefpublicc;
-	}
-	
-	public Vector getListeNom() {
+    public Vector getListeclefpriveeu() {
+        return listeclefpriveeu;
+    }
+
+    public Vector getListeNom() throws RemoteException{
 		return listenom;
 	}
 	
     public void ajoutecontact(String S) {
 		for (int i = 0; i < listedecontact.size(); i++) {
 		if (S.equals(listedecontact.get(i)));
-		System.out.println("contact déja existant");
-
+	//	System.out.println("contact déja existant");
 		}
 		listedecontact.add(S);
+	//	System.out.println(listedecontact);
 
-}}
+}
+    @Override
+    public Vector recupere() throws RemoteException {
+        return listedecontact;
+    }
+}
